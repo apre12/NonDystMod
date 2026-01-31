@@ -49,6 +49,8 @@ public class ExampleThrownItem extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
 
+
+
         Entity target = result.getEntity();
 
         if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
