@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
@@ -14,12 +15,14 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.structure.structures.MineshaftPieces;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -53,7 +56,7 @@ public class Nondystmod {
 
 
     // Creates a new Block with the id "nondystmod:example_block", combining the namespace and path
-    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
+    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL)));
     // Creates a new BlockItem with the id "nondystmod:example_block", combining the namespace and path
     public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
 
@@ -69,6 +72,7 @@ public class Nondystmod {
     );
 
 
+
     public static final RegistryObject<Item> EXAMPLE_THROWABLE_ITEM = ITEMS
             .register(
                     "example_throwable_item",
@@ -76,6 +80,10 @@ public class Nondystmod {
                     new Item.Properties()
             )
     );
+
+    public static final RegistryObject<Block> MICROWAVE = BLOCKS.register("microwave", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
+
+    public static final RegistryObject<Item> MICROWAVE_ITEM = ITEMS.register("microwave", () -> new BlockItem(MICROWAVE.get(), new Item.Properties()));
 
 
     public static final RegistryObject<EntityType<ExampleThrownItem>> EXAMPLE_THROWN_ITEM =
@@ -122,7 +130,7 @@ public class Nondystmod {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
-
+        // Register the entity ikarilyaku...
         ENTITEES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
@@ -133,6 +141,9 @@ public class Nondystmod {
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -158,6 +169,12 @@ public class Nondystmod {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
+
+    @SubscribeEvent
+     public void onRegisterCommands(RegisterCommandsEvent event) {
+              //このregisterメソッドを呼び出すようにする
+             ExampleCommands.register(event.getDispatcher());
+     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

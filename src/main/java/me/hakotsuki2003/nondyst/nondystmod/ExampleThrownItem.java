@@ -1,6 +1,7 @@
 package me.hakotsuki2003.nondyst.nondystmod;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
@@ -49,10 +50,10 @@ public class ExampleThrownItem extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
 
-
-
         Entity target = result.getEntity();
+        Level level = this.level();
 
+        if(level.isClientSide) return;
         if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
             LightningBolt lightning = EntityType.LIGHTNING_BOLT.create(serverLevel);
             if (lightning != null) {
@@ -61,10 +62,18 @@ public class ExampleThrownItem extends ThrowableItemProjectile {
                         target.getY(),
                         target.getZ()
                 );
+
+                Entity owner = this.getOwner();
+                if (owner instanceof ServerPlayer serverPlayer){
+                    lightning.setCause(serverPlayer);
+                }
+
                 serverLevel.addFreshEntity(lightning);
             }
         }
     }
+
+
 
     @Override
     protected void onHit(HitResult result) {
