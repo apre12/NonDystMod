@@ -203,7 +203,7 @@ public class Nondystmod {
 
         @SubscribeEvent
         public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-            event.registerLayerDefinition(PrintRenderer.LAYER_LOCATION, PrintModel::createBodyLayer);
+            event.registerLayerDefinition(Modelprint.LAYER_LOCATION, Modelprint::createBodyLayer);
         }
     }
 }
