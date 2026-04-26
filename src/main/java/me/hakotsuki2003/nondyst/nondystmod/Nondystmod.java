@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -195,8 +196,14 @@ public class Nondystmod {
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
             //飛んでいるエンティティをアイテムと同じ見た目にする。
             EntityRenderers.register(EXAMPLE_THROWN_ITEM.get(), ThrownItemRenderer::new);
+            
             // printエンティティのレンダラーを登録
-            EntityRenderers.register(PRINT_ENTITY.get(), ThrownItemRenderer::new);
+            EntityRenderers.register(PRINT_ENTITY.get(), PrintRenderer::new);
+        }
+
+        @SubscribeEvent
+        public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+            event.registerLayerDefinition(PrintRenderer.LAYER_LOCATION, PrintModel::createBodyLayer);
         }
     }
 }
