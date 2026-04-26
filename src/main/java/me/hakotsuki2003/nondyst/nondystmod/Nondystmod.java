@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
@@ -15,14 +14,13 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.levelgen.structure.structures.MineshaftPieces;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -93,6 +91,13 @@ public class Nondystmod {
                             .build("example_thrown_item")
             );
 
+    public static final RegistryObject<EntityType<PrintEntity>> PRINT_ENTITY =
+            ENTITEES.register("print",
+                    () -> EntityType.Builder.<PrintEntity>of(PrintEntity::new, MobCategory.CREATURE)
+                            .sized(0.5f, 0.5f)
+                            .build("print")
+            );
+
 
     // Creates a creative tab with the id "nondystmod:example_tab" for the example item, that is placed after the combat tab
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB =
@@ -142,8 +147,7 @@ public class Nondystmod {
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
-
-
+        modEventBus.addListener(this::onAttributeCreation);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -161,6 +165,10 @@ public class Nondystmod {
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) event.accept(EXAMPLE_BLOCK_ITEM);
+    }
+
+    public void onAttributeCreation(EntityAttributeCreationEvent event) {
+        event.put(PRINT_ENTITY.get(), PrintEntity.createAttributes().build());
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -187,6 +195,8 @@ public class Nondystmod {
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
             //飛んでいるエンティティをアイテムと同じ見た目にする。
             EntityRenderers.register(EXAMPLE_THROWN_ITEM.get(), ThrownItemRenderer::new);
+            // printエンティティのレンダラーを登録
+            EntityRenderers.register(PRINT_ENTITY.get(), ThrownItemRenderer::new);
         }
     }
 }

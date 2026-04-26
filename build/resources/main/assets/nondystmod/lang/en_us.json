@@ -1,5 +1,6 @@
 {
   "block.nondystmod.example_block": "Example Block",
+  "block.nondystmod.microwave": "Microwave",
   "item.nondystmod.example_item": "Example Item",
   "item.nondystmod.example_throwable_item": "Example Throwable Item",
   "item.nondystmod.microwave_frequency": "Microwave Frequency"
