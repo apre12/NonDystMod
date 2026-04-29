@@ -72,31 +72,19 @@ public class Nondystmod {
 
 
 
-    public static final RegistryObject<Item> EXAMPLE_THROWABLE_ITEM = ITEMS
-            .register(
-                    "example_throwable_item",
-            () -> new ExampleThrowableItem(
-                    new Item.Properties()
-            )
-    );
+    public static final RegistryObject<Item> GESTICK = ITEMS.register("gestick", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> CHAP = ITEMS.register("chap", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SPEEKER = ITEMS.register("speeker", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> POND = ITEMS.register("pond", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DEPLOYER = ITEMS.register("deployer", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ARCHAEA_CARTRIDGE = ITEMS.register("archaea_cartridge", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SILICA_PLACEHOLDER = ITEMS.register("silica_placeholder", () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Block> MICROWAVE = BLOCKS.register("microwave", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
-
-    public static final RegistryObject<Item> MICROWAVE_ITEM = ITEMS.register("microwave", () -> new BlockItem(MICROWAVE.get(), new Item.Properties()));
-
-
-    public static final RegistryObject<EntityType<ExampleThrownItem>> EXAMPLE_THROWN_ITEM =
-            ENTITEES.register("example_thrown_item",
-                    () -> EntityType.Builder.<ExampleThrownItem>of(ExampleThrownItem::new, MobCategory.MISC)
-                            .sized(0.25f, 0.25f)
-                            .build("example_thrown_item")
-            );
-
-    public static final RegistryObject<EntityType<PrintEntity>> PRINT_ENTITY =
-            ENTITEES.register("print",
-                    () -> EntityType.Builder.<PrintEntity>of(PrintEntity::new, MobCategory.CREATURE)
-                            .sized(0.5f, 0.5f)
-                            .build("print")
+    public static final RegistryObject<EntityType<ExternalSilicoShellEntity>> ESS_ENTITY =
+            ENTITEES.register("external_silico_shell",
+                    () -> EntityType.Builder.<ExternalSilicoShellEntity>of(ExternalSilicoShellEntity::new, MobCategory.CREATURE)
+                            .sized(0.7f, 0.7f)
+                            .build("external_silico_shell")
             );
 
 
@@ -109,14 +97,20 @@ public class Nondystmod {
                             .withTabsBefore(CreativeModeTabs.COMBAT)
                             .icon(
                                     () ->
-                                            EXAMPLE_ITEM
+                                            GESTICK
                                                     .get()
                                                     .getDefaultInstance()
                             ).displayItems(
                                     (parameters, output)
                                             -> {
+                                                output.accept(GESTICK.get());
+                                                output.accept(CHAP.get());
+                                                output.accept(SPEEKER.get());
+                                                output.accept(POND.get());
+                                                output.accept(DEPLOYER.get());
+                                                output.accept(ARCHAEA_CARTRIDGE.get());
+                                                output.accept(SILICA_PLACEHOLDER.get());
                                                 output.accept(EXAMPLE_ITEM.get());
-                                                // Add the example item to the tab. For your own tabs, this method is preferred over the event
                                                 output.accept(EXAMPLE_BLOCK_ITEM.get());
                                                 output.accept(EXAMPLE_THROWABLE_ITEM.get());
                                                 output.accept(MICROWAVE_FREQUENCY.get());
@@ -169,7 +163,7 @@ public class Nondystmod {
     }
 
     public void onAttributeCreation(EntityAttributeCreationEvent event) {
-        event.put(PRINT_ENTITY.get(), PrintEntity.createAttributes().build());
+        event.put(ESS_ENTITY.get(), ExternalSilicoShellEntity.createAttributes().build());
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -197,13 +191,13 @@ public class Nondystmod {
             //飛んでいるエンティティをアイテムと同じ見た目にする。
             EntityRenderers.register(EXAMPLE_THROWN_ITEM.get(), ThrownItemRenderer::new);
             
-            // printエンティティのレンダラーを登録
-            EntityRenderers.register(PRINT_ENTITY.get(), PrintRenderer::new);
+            // ESSエンティティのレンダラーを登録
+            EntityRenderers.register(ESS_ENTITY.get(), ExternalSilicoShellRenderer::new);
         }
 
         @SubscribeEvent
         public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-            event.registerLayerDefinition(Modelprint.LAYER_LOCATION, Modelprint::createBodyLayer);
+            event.registerLayerDefinition(ExternalSilicoShellModel.LAYER_LOCATION, ExternalSilicoShellModel::createBodyLayer);
         }
     }
 }

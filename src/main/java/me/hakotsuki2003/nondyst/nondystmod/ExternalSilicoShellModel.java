@@ -10,16 +10,18 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
-public class Modelprint<T extends Entity> extends EntityModel<T> {
+public class ExternalSilicoShellModel<T extends ExternalSilicoShellEntity> extends EntityModel<T> {
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
-			new ResourceLocation(Nondystmod.MODID, "print"), "main");
+			new ResourceLocation(Nondystmod.MODID, "external_silico_shell"), "main");
 	private final ModelPart bone3;
 	private final ModelPart bone;
 	private final ModelPart bone2;
 	private final ModelPart bone4;
 	private final ModelPart bb_main;
 
-	public Modelprint(ModelPart root) {
+	private int shellColor = 0xFFFFFF;
+
+	public ExternalSilicoShellModel(ModelPart root) {
 		this.bone3 = root.getChild("bone3");
 		this.bone = root.getChild("bone");
 		this.bone2 = root.getChild("bone2");
@@ -229,16 +231,20 @@ public class Modelprint<T extends Entity> extends EntityModel<T> {
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
 			float headPitch) {
-
+		this.shellColor = entity.getShellColor();
 	}
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay,
 			float red, float green, float blue, float alpha) {
-		bone3.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone2.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		bone4.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+		float r = (float)(shellColor >> 16 & 255) / 255.0F;
+		float g = (float)(shellColor >> 8 & 255) / 255.0F;
+		float b = (float)(shellColor & 255) / 255.0F;
+
+		bone3.render(poseStack, vertexConsumer, packedLight, packedOverlay, r * red, g * green, b * blue, alpha);
+		bone.render(poseStack, vertexConsumer, packedLight, packedOverlay, r * red, g * green, b * blue, alpha);
+		bone2.render(poseStack, vertexConsumer, packedLight, packedOverlay, r * red, g * green, b * blue, alpha);
+		bone4.render(poseStack, vertexConsumer, packedLight, packedOverlay, r * red, g * green, b * blue, alpha);
+		bb_main.render(poseStack, vertexConsumer, packedLight, packedOverlay, r * red, g * green, b * blue, alpha);
 	}
 }
